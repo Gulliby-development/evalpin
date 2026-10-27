@@ -1,0 +1,13 @@
+reply greet
+| Hello Ana!
+reply greet
+| Hi there.
+reply sum
+| 4
+reply profile
+| ```json
+| {"user": {"name": "Ana", "tags": ["dev", "ops"]}}
+| ```
+fail brief rate limited
+reply brief
+| This is much too long.

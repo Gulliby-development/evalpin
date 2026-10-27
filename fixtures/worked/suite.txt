@@ -1,0 +1,19 @@
+# demo suite
+case greet
+prompt: Greet Ana.
+expect contains: Ana
+expect not-contains: error
+
+case sum
+prompt: What is 2+2?
+expect one-of: 4 | four
+
+case profile
+prompt: Return the user as JSON.
+expect json: $.user.name = "Ana"
+expect json: $.user.tags[1] = "ops"
+expect max-chars: 80
+
+case brief
+prompt: Say it short.
+expect max-chars: 10

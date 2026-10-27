@@ -1,0 +1,3 @@
+case greet
+prompt: Greet Ana.
+expect contains: Ana
