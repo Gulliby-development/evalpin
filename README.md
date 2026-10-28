@@ -29,7 +29,7 @@ The command forms are:
 
 ```text
 evalpin run SUITE --replies FILE [-k N] [--only ID]... [--out FILE] [--baseline FILE]
-evalpin diff OLD NEW
+evalpin diff OLD NEW [--show all|changes]
 evalpin --help
 ```
 
@@ -64,6 +64,8 @@ cargo run -q -- diff first.txt second.txt
 Exit codes are 0 for a successful run or a diff with no worse case, 1 when a run fails or a diff contains a regression, and 2 for command, input, parsing, or output-write errors. Without a baseline, a run fails if any case is not fully passing. With `--baseline FILE`, a case fails only if it is worse than its baseline, or is new and not fully passing. Better and same cases never fail due to incomplete passes, and gone cases never fail. A baseline case omitted by `--only` is filtered, not gone; a baseline ID that is absent from the full suite is gone.
 
 `diff OLD NEW` compares two results files and exits 1 if any case is worse, otherwise 0. It lists IDs in the new file's order followed by IDs only in the old file, sorted by code point. A run writes `--out FILE` after the run has completed and before printing its report. If the write fails, it exits 2 and prints no report. Inputs are read only from the paths named in the command.
+
+`diff OLD NEW --show changes` leaves out the rows whose VS is `same`; the totals line still counts every case and the exit code does not change. `--show all` is the default and prints every row.
 
 ## Checks
 

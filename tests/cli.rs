@@ -75,7 +75,7 @@ fn help_and_command_diagnostics_use_one_exact_io_call() {
     assert_eq!(
         io.outputs,
         vec![
-            "usage: evalpin run SUITE --replies FILE [-k N] [--only ID]... [--out FILE] [--baseline FILE]\n       evalpin diff OLD NEW\n       evalpin --help\n"
+            "usage: evalpin run SUITE --replies FILE [-k N] [--only ID]... [--out FILE] [--baseline FILE]\n       evalpin diff OLD NEW [--show all|changes]\n       evalpin --help\n"
         ]
     );
     assert!(io.errors.is_empty());
