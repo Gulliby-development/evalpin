@@ -47,6 +47,10 @@ pub fn table(rows: &[Vec<String>]) -> String {
 }
 
 pub fn diff_report(old: &[Row], new: &[Row]) -> Report {
+    diff_report_shown(old, new, false)
+}
+
+pub fn diff_report_shown(old: &[Row], new: &[Row], changes_only: bool) -> Report {
     let mut rows = vec![vec![
         "CASE".to_owned(),
         "OLD".to_owned(),
@@ -65,6 +69,9 @@ pub fn diff_report(old: &[Row], new: &[Row]) -> Report {
         record_comparison(comparison.clone(), &mut counts);
         if comparison == Vs::Worse {
             failed = true;
+        }
+        if changes_only && comparison == Vs::Same {
+            continue;
         }
         rows.push(vec![
             new_row.id.clone(),
@@ -90,7 +97,7 @@ pub fn diff_report(old: &[Row], new: &[Row]) -> Report {
         ]);
     }
 
-    let case_count = rows.len().saturating_sub(1);
+    let case_count: usize = counts.iter().sum();
     let mut output = table(&rows);
     output.push_str(&format!(
         "evalpin: {case_count} cases, {} better, {} same, {} worse, {} new, {} gone\n",

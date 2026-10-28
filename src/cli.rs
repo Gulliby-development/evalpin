@@ -9,7 +9,7 @@ use crate::score::Score;
 use crate::suite;
 use crate::text::{self, Failure};
 
-const HELP: &str = "usage: evalpin run SUITE --replies FILE [-k N] [--only ID]... [--out FILE] [--baseline FILE]\n       evalpin diff OLD NEW\n       evalpin --help\n";
+const HELP: &str = "usage: evalpin run SUITE --replies FILE [-k N] [--only ID]... [--out FILE] [--baseline FILE]\n       evalpin diff OLD NEW [--show all|changes]\n       evalpin --help\n";
 
 pub fn run(args: &[String], io: &mut dyn Io) -> i32 {
     let Some((command, command_args)) = args.split_first() else {
@@ -132,7 +132,21 @@ fn run_command(args: &[String], io: &mut dyn Io) -> Result<(String, i32), Failur
 }
 
 fn diff_command(args: &[String], io: &mut dyn Io) -> Result<(String, i32), Failure> {
-    let parsed = options::parse(args, &[], 2)?;
+    let specs = [Spec {
+        name: "--show",
+        repeat: false,
+    }];
+    let parsed = options::parse(args, &specs, 2)?;
+    let changes_only = match parsed.value("--show") {
+        None | Some("all") => false,
+        Some("changes") => true,
+        Some(other) => {
+            return Err(Failure(format!(
+                "--show needs all or changes, got {}",
+                text::name(other)
+            )));
+        }
+    };
     let old_path = parsed
         .operands
         .first()
@@ -146,7 +160,7 @@ fn diff_command(args: &[String], io: &mut dyn Io) -> Result<(String, i32), Failu
     let old = results::read(&old_lines, old_path)?;
     let new_lines = io::read_lines(io, new_path)?;
     let new = results::read(&new_lines, new_path)?;
-    let report = report::diff_report(&old, &new);
+    let report = report::diff_report_shown(&old, &new, changes_only);
     Ok((report.text, if report.failed { 1 } else { 0 }))
 }
 
