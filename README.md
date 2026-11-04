@@ -76,6 +76,7 @@ Each suite case has one prompt and one or more `expect KIND: VALUE` lines. Befor
 | `equals` | Any non-empty text | The trimmed reply must exactly equal the value. |
 | `contains` | Any non-empty text | The trimmed reply must contain the value as a substring. |
 | `not-contains` | Any non-empty text | The trimmed reply must not contain the value as a substring. |
+| `starts-with` | Any non-empty text | The trimmed reply must begin with the value; the comparison is exact, so case and inner spaces count. |
 | `one-of` | Non-empty choices separated by `|` | The reply must equal one of the choices; surrounding spaces and tabs on each choice are removed. |
 | `max-chars` | 1–6 ASCII digits | The reply may contain at most this many Unicode code points. |
 | `min-chars` | 1–6 ASCII digits | The reply must contain at least this many Unicode code points. |

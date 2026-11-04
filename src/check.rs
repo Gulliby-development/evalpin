@@ -7,6 +7,7 @@ pub enum Check {
     Equals(String),
     Contains(String),
     NotContains(String),
+    StartsWith(String),
     OneOf(Vec<String>),
     MaxChars(usize),
     MinChars(usize),
@@ -37,6 +38,12 @@ pub fn parse(kind: &str, value: &str) -> Result<Check, String> {
                 return Err(needs_value(kind));
             }
             Check::NotContains(value.to_owned())
+        }
+        "starts-with" => {
+            if value.is_empty() {
+                return Err(needs_value(kind));
+            }
+            Check::StartsWith(value.to_owned())
         }
         "one-of" => {
             if value.is_empty() {
@@ -154,6 +161,13 @@ impl Check {
                     Some(format!("reply contains \"{}\"", disp(needle)))
                 } else {
                     None
+                }
+            }
+            Check::StartsWith(prefix) => {
+                if answer.starts_with(prefix.as_str()) {
+                    None
+                } else {
+                    Some(format!("reply does not start with \"{}\"", disp(prefix)))
                 }
             }
             Check::OneOf(choices) => {
